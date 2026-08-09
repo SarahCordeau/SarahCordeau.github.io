@@ -85,8 +85,30 @@ document.getElementById('custom-file-btn').addEventListener('click', function ()
     document.getElementById('file-input').click();
 });
 
+function loadJsonAutomated(callback) {
+    // Utilisez un chemin relatif (sans '/' au début pour éviter la racine du domaine)
+    fetch('family.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Impossible de charger le fichier JSON (" + response.status + ")");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (Array.isArray(data)) {
+                callback(data);
+            } else {
+                alert("Le fichier JSON n'est pas un tableau !");
+            }
+        })
+        .catch(err => {
+            alert("Erreur lors de la lecture du JSON : " + err.message);
+        });
+}
+
+
 document.addEventListener('DOMContentLoaded', function () {
-    loadJsonFile(function (data) {
+    loadJsonAutomated(function (data) {
         familyTree.addFamilyMembers(data);
         familyTree.draw(1, familyTree.fit, function () {
             const svg = document.querySelector('#tree svg');
