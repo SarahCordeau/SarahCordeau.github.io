@@ -106,7 +106,36 @@ function loadJsonAutomated(callback) {
         });
 }
 
+//Event to load manually json file
+document.addEventListener('DOMContentLoaded', function () {
+    loadJsonFile(function (data) {
+        familyTree.addFamilyMembers(data);
+        familyTree.draw(1, familyTree.fit, function () {
+            const svg = document.querySelector('#tree svg');
+            if (svg) svg.setAttribute('id', 'tree-svg');
 
+            const treeSvg = document.getElementById('tree-svg');
+            if (!treeSvg) return;
+
+            const rootG = treeSvg.querySelector('g[data-shape-id="1"]');
+            const fo = rootG && rootG.querySelector('foreignObject');
+            if (!fo) return;
+
+            const rect = fo.getBoundingClientRect();
+            const pt = treeSvg.createSVGPoint();
+            pt.x = rect.left + rect.width / 2;
+            pt.y = rect.top;
+            const svgPt = pt.matrixTransform(treeSvg.getScreenCTM().inverse());
+
+            const vb = treeSvg.viewBox.baseVal;
+            const newViewBox = `${svgPt.x - vb.width / 2} ${svgPt.y - 60} ${vb.width} ${vb.height}`;
+            treeSvg.setAttribute('viewBox', newViewBox);
+            initialViewBox = newViewBox;
+        });
+    });
+})
+
+// Event to load automatically json file
 document.addEventListener('DOMContentLoaded', function () {
     loadJsonAutomated(function (data) {
         familyTree.addFamilyMembers(data);
@@ -133,7 +162,10 @@ document.addEventListener('DOMContentLoaded', function () {
             initialViewBox = newViewBox;
         });
     });
+})
 
+//Event for search button
+document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('search-btn').addEventListener('click', function () {
         const term = document.getElementById('svg-search').value.trim().toLowerCase();
         if (term !== lastSearchTerm) {
