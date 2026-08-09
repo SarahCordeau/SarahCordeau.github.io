@@ -58,12 +58,12 @@ function centerOnForeignObj(foreignObj) {
 
 
 function loadJsonFile(callback) {
-    document.getElementById('file-input').addEventListener('change', function(event) {
+    document.getElementById('file-input').addEventListener('change', function (event) {
         const file = event.target.files[0];
         if (!file) return;
 
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             try {
                 const data = JSON.parse(e.target.result);
                 if (Array.isArray(data)) {
@@ -80,15 +80,15 @@ function loadJsonFile(callback) {
     });
 }
 
-document.getElementById('custom-file-btn').addEventListener('click', function() {
+document.getElementById('custom-file-btn').addEventListener('click', function () {
     // Ouvre le dialogue de sélection de fichier
     document.getElementById('file-input').click();
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    loadJsonFile(function(data) {
+document.addEventListener('DOMContentLoaded', function () {
+    loadJsonFile(function (data) {
         familyTree.addFamilyMembers(data);
-        familyTree.draw(1, familyTree.fit, function() {
+        familyTree.draw(1, familyTree.fit, function () {
             const svg = document.querySelector('#tree svg');
             if (svg) svg.setAttribute('id', 'tree-svg');
 
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    document.getElementById('search-btn').addEventListener('click', function() {
+    document.getElementById('search-btn').addEventListener('click', function () {
         const term = document.getElementById('svg-search').value.trim().toLowerCase();
         if (term !== lastSearchTerm) {
             searchMatches = collectMatches(term);
@@ -124,11 +124,11 @@ document.addEventListener('DOMContentLoaded', function() {
         searchIndex = (searchIndex + 1) % searchMatches.length;
     });
 
-    document.getElementById('svg-search').addEventListener('keydown', function(e) {
+    document.getElementById('svg-search').addEventListener('keydown', function (e) {
         if (e.key === 'Enter') document.getElementById('search-btn').click();
     });
 
-    document.getElementById('svg-search').addEventListener('input', function() {
+    document.getElementById('svg-search').addEventListener('input', function () {
         if (!this.value.trim()) {
             const svg = document.getElementById('tree-svg');
             if (svg) svg.querySelectorAll('foreignObject').forEach(f => {
@@ -161,7 +161,7 @@ template.defs =
                 <stop offset="100%" style="stop-color:#00A7D4;stop-opacity:1" />
             </linearGradient>`;
 
-template.svg = function(node) {
+template.svg = function (node) {
     let url = node.familyMember.sexOrGender == "male" ? "my_grad_male" :
         (node.familyMember.sexOrGender == "female" ? "my_grad_female" : "my_grad");
     return `<clipPath id="my_template_photo">
@@ -202,9 +202,9 @@ separations.siblingNeighbor = 90;
 separations.spouseNeighbor = 90;
 separations.stepParentNeighbor = 90;
 
-template.html = function(node) { return `` };
+template.html = function (node) { return `` };
 
-template.insertSvg = function(node) {
+template.insertSvg = function (node) {
     let familyPhoto = "https://placehold.co/100x100.png";
     if (node.familyMember.photo) {
         familyPhoto = node.familyMember.photo
@@ -229,7 +229,7 @@ template.insertSvg = function(node) {
         text += `
             <text fill="white" text-anchor="left"
                 x="20" y="${node.height / 2 + 65}">
-                Décès: ${node.familyMember.dateOfDeath} - ${node.familyMember.cityOfDeath?? "-"}
+                Décès: ${node.familyMember.dateOfDeath} - ${node.familyMember.cityOfDeath ?? "-"}
             </text>`;
     }
 
@@ -237,7 +237,7 @@ template.insertSvg = function(node) {
         text += `
             <text fill="white" text-anchor="letf"
                 x="20" y="${node.height / 2 + 85}">
-                Mariage: ${node.familyMember.weddingDate} - ${node.familyMember.weddingCity?? "-"}
+                Mariage: ${node.familyMember.weddingDate} - ${node.familyMember.weddingCity ?? "-"}
             </text>`;
     }
 
@@ -256,13 +256,13 @@ familyTree.controlsUI.show({
     zoom_out: { title: 'zoom out' },
 });
 
-familyTree.onNodeClick(function(args) {
+familyTree.onNodeClick(function (args) {
     if (this.readOnly) {
         this.centerNodes([args.node]);
     }
 });
 
-document.getElementById('tree').addEventListener('dblclick', function(e) {
+document.getElementById('tree').addEventListener('dblclick', function (e) {
     if (!e.target.closest('g[data-shape-id]') && initialViewBox) {
         document.getElementById('tree-svg').setAttribute('viewBox', initialViewBox);
     }
