@@ -4,8 +4,10 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Famille CORDEAU - Notre famille</title>
-		<meta
-		name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<script src="https://cdn.jsdelivr.net/npm/pdfkit@0.10.0/js/pdfkit.standalone.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/svg-to-pdfkit@0.1.8/source.js"></script>
 
 		<!-- Balkan Family Tree -->
 		<script src="https://cdn.balkan.app/familytree2.js"></script>
@@ -93,7 +95,8 @@
 			}
 
 			/* Bouton Charger mon arbre */
-			#custom-file-btn {
+			#custom-file-btn,
+			#print-tree {
 				background: linear-gradient(90deg, #32475b 0%, #00a7d4 100%);
 				color: white;
 				border: none;
@@ -106,11 +109,13 @@
 				white-space: nowrap; /* Évite le texte sur deux lignes si possible */
 			}
 
-			#custom-file-btn:hover {
+			#custom-file-btn:hover,
+			#print-tree:hover {
 				background: linear-gradient(90deg, #00a7d4 0%, #32475b 100%);
 			}
 
-			#custom-file-btn:active {
+			#custom-file-btn:active,
+			#print-tree:active {
 				transform: scale(0.98); /* Léger effet d'enfoncement au clic */
 			}
 
@@ -220,6 +225,7 @@
 				}
 
 				#custom-file-btn,
+				#print-tree,
 				.search-group {
 					width: 100%; /* Le bouton et la recherche prennent 100% de la largeur du smartphone */
 					max-width: none;
@@ -265,6 +271,10 @@
 				<div class="search-group">
 					<input type="text" id="svg-search" placeholder="Rechercher un nom...">
 					<button id="search-btn" title="Clique pour rechercher le profil">&#128269;</button>
+				</div>
+
+				<div>
+					<button id="print-tree" title="Imprimer en PDF l'arbre">Print</button>
 				</div>
 			</div>
 

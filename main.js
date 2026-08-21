@@ -80,6 +80,40 @@ function loadJsonFile(callback) {
     });
 }
 
+function downloadSvgAsA2PDF() {
+    const svgElement = document.getElementById('tree-svg');
+    if (!svgElement) {
+        console.error("L'élément SVG '#tree-svg' n'a pas été trouvé.");
+        return;
+    }
+
+    // Convertit le SVG en chaîne de caractères (XML) pour contourner les bugs de classList du DOM live
+    const serializer = new XMLSerializer();
+    const svgString = serializer.serializeToString(svgElement);
+
+    const pdfWidth = 1683.78;
+    const pdfHeight = 1190.55;
+
+    const doc = new window.PDFDocument({ size: [pdfWidth, pdfHeight], margin: 0 });
+    const chunks = [];
+
+    doc.on('data', (chunk) => chunks.push(chunk));
+    doc.on('end', () => {
+        const pdfBlob = new Blob(chunks, { type: 'application/pdf' });
+        const blobUrl = URL.createObjectURL(pdfBlob);
+        window.open(blobUrl);
+    });
+
+    // Passer la chaîne 'svgString' au lieu de l'objet 'svgElement'
+    window.SVGtoPDF(doc, svgString, 0, 0, {
+        width: pdfWidth,
+        height: pdfHeight,
+        preserveAspectRatio: 'xMidYMid meet' // Évite de déformer l'arbre
+    });
+
+    doc.end();
+}
+
 document.getElementById('custom-file-btn').addEventListener('click', function () {
     // Ouvre le dialogue de sélection de fichier
     document.getElementById('file-input').click();
@@ -194,6 +228,10 @@ document.addEventListener('DOMContentLoaded', function () {
             lastSearchTerm = '';
         }
     });
+
+    document.getElementById('print-tree').addEventListener('click', function () {
+        downloadSvgAsA2PDF();
+    })
 });
 
 
